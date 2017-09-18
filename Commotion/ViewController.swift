@@ -40,11 +40,11 @@ class ViewController: UIViewController {
         // is activity is available
         if CMMotionActivityManager.isActivityAvailable(){
             // update from this queue (should we use the MAIN queue here??.... )
-            self.activityManager.startActivityUpdatesToQueue(NSOperationQueue.mainQueue())
+            self.activityManager.startActivityUpdates(to: OperationQueue.main)
             {(activity:CMMotionActivity?)->Void in
                 // unwrap the activity and disp
                 if let unwrappedActivity = activity {
-                    dispatch_async(dispatch_get_main_queue()){
+                    DispatchQueue.main.async{
                         self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)"
                     }
                 }
@@ -58,15 +58,15 @@ class ViewController: UIViewController {
         
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.startPedometerUpdatesFromDate(NSDate(), withHandler: self.handlePedometer)
+            pedometer.startUpdates(from: Date(), withHandler: self.handlePedometer as! CMPedometerHandler)
         }
     }
     
     //ped handler
-    func handlePedometer(pedData:CMPedometerData?, error:NSError?){
+    func handlePedometer(_ pedData:CMPedometerData?, error:NSError?){
         if pedData != nil {
             let steps = pedData?.numberOfSteps
-            dispatch_async(dispatch_get_main_queue()){
+            DispatchQueue.main.async{
                 self.stepsSlider.setValue((steps?.floatValue)!, animated: true)
                 self.stepsLabel.text = "Steps: \(steps!)"
             }
