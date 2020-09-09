@@ -58,12 +58,12 @@ class ViewController: UIViewController {
         
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.startUpdates(from: Date(), withHandler: self.handlePedometer as! CMPedometerHandler)
+            pedometer.startUpdates(from: Date(), withHandler: self.handlePedometer )
         }
     }
     
     //ped handler
-    func handlePedometer(_ pedData:CMPedometerData?, error:NSError?){
+    func handlePedometer(_ pedData:CMPedometerData?, error:Error?){
         if pedData != nil {
             let steps = pedData?.numberOfSteps
             DispatchQueue.main.async{
